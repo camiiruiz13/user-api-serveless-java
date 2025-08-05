@@ -1,0 +1,49 @@
+service: user-api-serverless-java
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: java17
+  region: us-east-1
+  memorySize: 512
+  timeout: 10
+
+package:
+  artifact: target/user-api-serverless-java-1.0-SNAPSHOT.jar
+
+functions:
+  getAllUsers:
+    handler: com.aws.ccamilo.com.app.useapiserveless.handler.GetAllUsersHandler::handleRequest
+    events:
+      - httpApi:
+          path: /users
+          method: get
+
+  getUserById:
+    handler: com.aws.ccamilo.com.app.useapiserveless.handler.GetUserByIdHandler::handleRequest
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: get
+
+  createUser:
+    handler: com.aws.ccamilo.com.app.useapiserveless.handler.CreateUserHandler::handleRequest
+    events:
+      - httpApi:
+          path: /users
+          method: post
+
+  updateUser:
+    handler: com.aws.ccamilo.com.app.useapiserveless.handler.UpdateUserHandler::handleRequest
+    events:
+      - httpApi:
+          path: /users
+          method: put
+
+  deleteUser:
+    handler: com.aws.ccamilo.com.app.useapiserveless.handler.DeleteUserHandler::handleRequest
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: delete
