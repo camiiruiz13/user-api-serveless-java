@@ -29,6 +29,7 @@ public class GetAllUsersHandler implements RequestHandler<Map<String, Object>, A
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> stringObjectMap, Context context) {
         List<UsersDTOResponse> users =  userServices.findAllUsers();
+        System.out.println("Usuarios listados correctamente");
         return ResponseBuilder.ok(users, ErrorException.USER_QUERY_SUCCESS_MESSAGE.getMessage());
 
     }

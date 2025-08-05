@@ -29,9 +29,12 @@ public class GetUserByIdHandler implements RequestHandler<Map<String, Object>, A
         Long id = Long.parseLong(pathParams.get("id"));
         try {
             UsersDTOResponse response = userServices.findUserById(id);
+            System.out.println("Se encuentra el usuario correctamente " + id);
             return ResponseBuilder.ok(response, ErrorException.USER_QUERY_SUCCESS_MESSAGE.getMessage());
         } catch (Exception ex) {
+            System.err.println("Error al elimnar: " + ex.getMessage());
             return ResponseBuilder.error(404, ex.getMessage(), ErrorException.USER_QUERY_ERROR_MESSAGE.getMessage() + id);
         }
     }
 }
+

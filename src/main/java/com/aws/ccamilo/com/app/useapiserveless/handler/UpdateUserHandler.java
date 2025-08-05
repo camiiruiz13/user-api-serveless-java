@@ -30,11 +30,14 @@ public class UpdateUserHandler implements RequestHandler<Map<String, Object>, Ap
         try {
             UserDTO userDTO = mapper.readValue(body, UserDTO.class);
             userServices.updateUser(userDTO);
+            System.out.println("Se actualiza correctamente el usuario");
             return ResponseBuilder.ok(null, ErrorException.USER_UPDATED.getMessage());
 
         } catch (Exception e) {
+            System.err.println("Error al elimnar: " + e.getMessage());
             return ResponseBuilder.error(400, e.getMessage(), ErrorException.USER_SAVE_ERROR_MESSAGE.getMessage());
         }
 
     }
 }
+

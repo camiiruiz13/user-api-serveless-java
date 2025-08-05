@@ -14,5 +14,6 @@ import java.util.Map;
 public class ApiGatewayResponse {
     private int statusCode;
     private Map<String, String> headers;
-    private Object body;
+    private String body;
+    private boolean isBase64Encoded;
 }

@@ -4,13 +4,12 @@ import com.aws.ccamilo.com.app.useapiserveless.commons.constants.ErrorException;
 import com.aws.ccamilo.com.app.useapiserveless.domain.model.User;
 import com.aws.ccamilo.com.app.useapiserveless.exception.UserNotFoundException;
 import com.aws.ccamilo.com.app.useapiserveless.facade.IUserFacade;
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-@RequiredArgsConstructor
+
 public class UserFacade implements IUserFacade {
 
     private static final List<User> users = new ArrayList<>();

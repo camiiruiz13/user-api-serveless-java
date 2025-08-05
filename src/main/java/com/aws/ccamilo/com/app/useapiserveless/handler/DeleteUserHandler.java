@@ -29,8 +29,10 @@ public class DeleteUserHandler implements RequestHandler<Map<String, Object>, Ap
         Long id = Long.parseLong(pathParams.get("id"));
         try {
             userServices.deleteUser(id);
+            System.out.println("Usuario eliminado exitosamente");
             return ResponseBuilder.ok(null, ErrorException.USER_QUERY_SUCCESS_MESSAGE.getMessage());
         } catch (Exception ex) {
+            System.err.println("Error al elimnar: " + ex.getMessage());
             return ResponseBuilder.error(404, ex.getMessage(), ErrorException.USER_QUERY_ERROR_MESSAGE.getMessage() + id);
         }
     }

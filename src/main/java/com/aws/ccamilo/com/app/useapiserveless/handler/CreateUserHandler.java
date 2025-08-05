@@ -28,13 +28,17 @@ public class CreateUserHandler  implements RequestHandler<Map<String, Object>, A
 
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> stringObjectMap, Context context) {
-        try{
-        String body = (String) stringObjectMap.get("body");
-        UserDTO userDTO = mapper.readValue(body, UserDTO.class);
-        userServices.saveUser(userDTO);
-        return ResponseBuilder.created(ErrorException.USER_REGISTERED_SUCCESS_MESSAGE.getMessage());
-        }catch(Exception ex){
-            return ResponseBuilder.error(400, ex.getMessage(), ErrorException.USER_SAVE_ERROR_MESSAGE.getMessage() );
+        System.out.println("CreateUserHandler - Request received: " + stringObjectMap);
+        try {
+            String body = (String) stringObjectMap.get("body");
+            UserDTO userDTO = mapper.readValue(body, UserDTO.class);
+            System.out.println("CreateUserHandler - Parsed body: " + userDTO);
+            userServices.saveUser(userDTO);
+            System.out.println("Usuario creado ");
+            return ResponseBuilder.created(ErrorException.USER_REGISTERED_SUCCESS_MESSAGE.getMessage());
+        } catch (Exception ex) {
+            System.err.println("CreateUserHandler - Error: " + ex.getMessage());
+            return ResponseBuilder.error(400, ex.getMessage(), ErrorException.USER_SAVE_ERROR_MESSAGE.getMessage());
         }
     }
 }

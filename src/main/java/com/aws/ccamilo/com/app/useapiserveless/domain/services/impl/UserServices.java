@@ -6,19 +6,22 @@ import com.aws.ccamilo.com.app.useapiserveless.domain.services.IUserServices;
 import com.aws.ccamilo.com.app.useapiserveless.dto.request.UserDTO;
 import com.aws.ccamilo.com.app.useapiserveless.dto.response.UsersDTOResponse;
 import com.aws.ccamilo.com.app.useapiserveless.facade.IUserFacade;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
+
 public class UserServices  implements IUserServices {
 
     private final IUserFacade userFacade;
 
     private static final Map<String, String> ENTITY_TO_RESPONSE_MAPPING = Map.of("id", "idUser");
     private static final Map<String, String> RESPONSE_TO_ENTITY_MAPPING = Map.of("idUser", "id");
+
+    public UserServices(IUserFacade userFacade) {
+        this.userFacade = userFacade;
+    }
 
     @Override
     public void saveUser(UserDTO userDTO) {
