@@ -22,3 +22,11 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Archivos y carpetas de IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+/target
+.mvn/wrapper/maven-wrapper.properties
