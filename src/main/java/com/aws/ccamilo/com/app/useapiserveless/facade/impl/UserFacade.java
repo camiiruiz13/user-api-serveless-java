@@ -1,37 +1,36 @@
 package com.aws.ccamilo.com.app.useapiserveless.facade.impl;
 
 import com.aws.ccamilo.com.app.useapiserveless.commons.constants.ErrorException;
-import com.aws.ccamilo.com.app.useapiserveless.domain.model.User;
+import com.aws.ccamilo.com.app.useapiserveless.domain.dao.IUserRepository;
+import com.aws.ccamilo.com.app.useapiserveless.domain.entity.User;
 import com.aws.ccamilo.com.app.useapiserveless.exception.UserNotFoundException;
 import com.aws.ccamilo.com.app.useapiserveless.facade.IUserFacade;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 
 public class UserFacade implements IUserFacade {
 
-    private static final List<User> users = new ArrayList<>();
-    private static final AtomicLong idGenerator = new AtomicLong(1);
+    private final IUserRepository repository;
+
+    public UserFacade(IUserRepository repository) {
+        this.repository = repository;
+    }
     @Override
     public User save(User user) {
-        user.setId(idGenerator.getAndIncrement());
-        users.add(user);
-        return user;
+        return repository.save(user);
     }
 
     @Override
-    public User findUserById(Long id) {
-        return users.stream()
-                .filter(u -> u.getId().equals(id))
-                .findFirst()
+    public User findUserById(String id) {
+        return repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(ErrorException.USER_QUERY_ERROR_MESSAGE.getMessage()));
     }
 
     @Override
     public List<User> findAll(User user) {
-        return new ArrayList<>(users);
+        return repository.findAll();
     }
 
     @Override
@@ -39,13 +38,13 @@ public class UserFacade implements IUserFacade {
         User existingUser = findUserById(user.getId());
         existingUser.setName(user.getName() != null ? user.getName() : existingUser.getName());
         existingUser.setEmail(user.getEmail() != null ? user.getEmail() : existingUser.getEmail());
-        return existingUser;
+        return repository.save(existingUser);
     }
 
     @Override
-    public User deleteUser(Long id) {
+    public User deleteUser(String id) {
         User user = findUserById(id);
-        users.remove(user);
+        repository.deleteById(id);
         return user;
     }
 }

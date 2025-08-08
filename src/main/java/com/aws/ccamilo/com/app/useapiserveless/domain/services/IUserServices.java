@@ -10,7 +10,7 @@ public interface IUserServices {
 
     void saveUser(UserDTO userDTO);
     List<UsersDTOResponse> findAllUsers();
-    UsersDTOResponse findUserById(Long id);
+    UsersDTOResponse findUserById(String id);
     void updateUser(UserDTO userDTO);
-    void deleteUser(Long id);
+    void deleteUser(String id);
 }

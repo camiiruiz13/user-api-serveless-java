@@ -9,6 +9,23 @@ provider:
   memorySize: 512
   timeout: 10
 
+  environment:
+    DYNAMODB_TABLE_NAME: users
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:CreateTable
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:Scan
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: arn:aws:dynamodb:us-east-1:*:table/users
+
 package:
   artifact: target/user-api-serverless-java-1.0-SNAPSHOT.jar
 
