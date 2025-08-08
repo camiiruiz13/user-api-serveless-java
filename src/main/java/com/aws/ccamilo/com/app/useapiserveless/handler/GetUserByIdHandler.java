@@ -4,6 +4,9 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.aws.ccamilo.com.app.useapiserveless.commons.constants.ErrorException;
 import com.aws.ccamilo.com.app.useapiserveless.commons.utils.ResponseBuilder;
+import com.aws.ccamilo.com.app.useapiserveless.config.DynamoDbConfig;
+import com.aws.ccamilo.com.app.useapiserveless.domain.dao.IUserRepository;
+import com.aws.ccamilo.com.app.useapiserveless.domain.dao.impl.DynamoUserRepository;
 import com.aws.ccamilo.com.app.useapiserveless.domain.services.IUserServices;
 import com.aws.ccamilo.com.app.useapiserveless.domain.services.impl.UserServices;
 import com.aws.ccamilo.com.app.useapiserveless.dto.response.UsersDTOResponse;
@@ -19,14 +22,16 @@ public class GetUserByIdHandler implements RequestHandler<Map<String, Object>, A
     private final IUserServices userServices;
 
     public GetUserByIdHandler() {
-        IUserFacade userFacade = new UserFacade();
+        var dynamoClient = DynamoDbConfig.getClient();
+        IUserRepository userRepository = new DynamoUserRepository(dynamoClient);
+        IUserFacade userFacade = new UserFacade(userRepository);
         this.userServices = new UserServices(userFacade);
     }
 
     @Override
     public ApiGatewayResponse handleRequest(Map<String, Object> stringObjectMap, Context context) {
         Map<String, String> pathParams = (Map<String, String>) stringObjectMap.get("pathParameters");
-        Long id = Long.parseLong(pathParams.get("id"));
+        String id = pathParams.get("id");
         try {
             UsersDTOResponse response = userServices.findUserById(id);
             System.out.println("Se encuentra el usuario correctamente " + id);

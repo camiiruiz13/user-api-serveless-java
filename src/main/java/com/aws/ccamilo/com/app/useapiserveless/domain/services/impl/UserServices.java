@@ -1,7 +1,7 @@
 package com.aws.ccamilo.com.app.useapiserveless.domain.services.impl;
 
 import com.aws.ccamilo.com.app.useapiserveless.commons.mapper.EntitieBuilder;
-import com.aws.ccamilo.com.app.useapiserveless.domain.model.User;
+import com.aws.ccamilo.com.app.useapiserveless.domain.entity.User;
 import com.aws.ccamilo.com.app.useapiserveless.domain.services.IUserServices;
 import com.aws.ccamilo.com.app.useapiserveless.dto.request.UserDTO;
 import com.aws.ccamilo.com.app.useapiserveless.dto.response.UsersDTOResponse;
@@ -9,6 +9,7 @@ import com.aws.ccamilo.com.app.useapiserveless.facade.IUserFacade;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -16,8 +17,7 @@ public class UserServices  implements IUserServices {
 
     private final IUserFacade userFacade;
 
-    private static final Map<String, String> ENTITY_TO_RESPONSE_MAPPING = Map.of("id", "idUser");
-    private static final Map<String, String> RESPONSE_TO_ENTITY_MAPPING = Map.of("idUser", "id");
+
 
     public UserServices(IUserFacade userFacade) {
         this.userFacade = userFacade;
@@ -25,34 +25,36 @@ public class UserServices  implements IUserServices {
 
     @Override
     public void saveUser(UserDTO userDTO) {
-
-        User user = EntitieBuilder.map(userDTO, User.class);
+        String generatedId = UUID.randomUUID().toString();
+        userDTO.setIdUser(generatedId);
+        System.out.println("DTO:" + userDTO);
+        User user = EntitieBuilder.mapDtoToEntity(userDTO, User.class);
         userFacade.save(user);
     }
 
     @Override
     public List<UsersDTOResponse> findAllUsers() {
         return userFacade.findAll(null).stream()
-                .map(user -> EntitieBuilder.map(user, UsersDTOResponse.class, ENTITY_TO_RESPONSE_MAPPING))
+                .map(user -> EntitieBuilder.mapEntityToDto(user, UsersDTOResponse.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public UsersDTOResponse findUserById(Long id) {
+    public UsersDTOResponse findUserById(String id) {
         User user = userFacade.findUserById(id);
-        return EntitieBuilder.map(user, UsersDTOResponse.class, ENTITY_TO_RESPONSE_MAPPING);
+        return EntitieBuilder.mapEntityToDto(user, UsersDTOResponse.class);
     }
 
     @Override
     public void updateUser(UserDTO userDTO) {
 
-        User user = EntitieBuilder.map(userDTO, User.class);
+        User user = EntitieBuilder.mapDtoToEntity(userDTO, User.class);
         userFacade.updateUser(user);
 
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(String id) {
         userFacade.deleteUser(id);
     }
 }

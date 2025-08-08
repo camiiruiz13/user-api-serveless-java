@@ -1,16 +1,16 @@
 package com.aws.ccamilo.com.app.useapiserveless.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.aws.ccamilo.com.app.useapiserveless.commons.annotations.FieldMapping;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UsersDTOResponse {
-    private Long idUser;
+    @FieldMapping("id")
+    private String idUser;
     private String name;
     private String email;
 }

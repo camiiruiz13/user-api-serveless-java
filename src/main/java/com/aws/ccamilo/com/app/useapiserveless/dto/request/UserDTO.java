@@ -1,15 +1,18 @@
 package com.aws.ccamilo.com.app.useapiserveless.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.aws.ccamilo.com.app.useapiserveless.commons.annotations.FieldMapping;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDTO {
+    @FieldMapping("id")
+    private String idUser;
     private String name;
     private String email;
 }

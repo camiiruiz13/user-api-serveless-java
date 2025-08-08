@@ -4,6 +4,9 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.aws.ccamilo.com.app.useapiserveless.commons.constants.ErrorException;
 import com.aws.ccamilo.com.app.useapiserveless.commons.utils.ResponseBuilder;
+import com.aws.ccamilo.com.app.useapiserveless.config.DynamoDbConfig;
+import com.aws.ccamilo.com.app.useapiserveless.domain.dao.IUserRepository;
+import com.aws.ccamilo.com.app.useapiserveless.domain.dao.impl.DynamoUserRepository;
 import com.aws.ccamilo.com.app.useapiserveless.domain.services.IUserServices;
 import com.aws.ccamilo.com.app.useapiserveless.domain.services.impl.UserServices;
 import com.aws.ccamilo.com.app.useapiserveless.dto.request.UserDTO;
@@ -20,7 +23,9 @@ public class UpdateUserHandler implements RequestHandler<Map<String, Object>, Ap
     private final ObjectMapper mapper = new ObjectMapper();
 
     public UpdateUserHandler() {
-        IUserFacade userFacade = new UserFacade();
+        var dynamoClient = DynamoDbConfig.getClient();
+        IUserRepository userRepository = new DynamoUserRepository(dynamoClient);
+        IUserFacade userFacade = new UserFacade(userRepository);
         this.userServices = new UserServices(userFacade);
     }
 

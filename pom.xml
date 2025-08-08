@@ -47,6 +47,27 @@
             <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
+        <!-- AWS SDK DynamoDB -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>dynamodb</artifactId>
+            <version>2.31.0</version>
+        </dependency>
+
+        <!-- Cliente mejorado (DynamoDbEnhancedClient) -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>dynamodb-enhanced</artifactId>
+            <version>2.31.0</version>
+        </dependency>
+
+        <!-- (Opcional) Autenticación y carga de credenciales -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>auth</artifactId>
+            <version>2.31.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
