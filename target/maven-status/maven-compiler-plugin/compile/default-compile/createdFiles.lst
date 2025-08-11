@@ -1,3 +1,4 @@
+com\aws\ccamilo\com\app\useapiserveless\domain\services\NotificationService.class
 com\aws\ccamilo\com\app\useapiserveless\handler\response\ApiGatewayResponse$ApiGatewayResponseBuilder.class
 com\aws\ccamilo\com\app\useapiserveless\commons\constants\ErrorException.class
 com\aws\ccamilo\com\app\useapiserveless\handler\DeleteUserHandler.class
@@ -25,5 +26,6 @@ com\aws\ccamilo\com\app\useapiserveless\domain\entity\User.class
 com\aws\ccamilo\com\app\useapiserveless\config\DynamoDbConfig.class
 com\aws\ccamilo\com\app\useapiserveless\facade\impl\UserFacade.class
 com\aws\ccamilo\com\app\useapiserveless\commons\utils\ResponseBuilder.class
+com\aws\ccamilo\com\app\useapiserveless\config\SnsConfig.class
 com\aws\ccamilo\com\app\useapiserveless\facade\IUserFacade.class
 com\aws\ccamilo\com\app\useapiserveless\commons\annotations\FieldMapping.class

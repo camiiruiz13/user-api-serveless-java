@@ -11,7 +11,7 @@ public class DynamoDbConfig {
         if (instance == null) {
             String region = System.getenv("AWS_REGION");
             if (region == null || region.isEmpty()) {
-                region = "us-east-1"; // fallback local
+                region = "us-east-1";
             }
 
             instance = DynamoDbClient.builder()

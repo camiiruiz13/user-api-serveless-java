@@ -3,6 +3,7 @@ package com.aws.ccamilo.com.app.useapiserveless.domain.services.impl;
 import com.aws.ccamilo.com.app.useapiserveless.commons.mapper.EntitieBuilder;
 import com.aws.ccamilo.com.app.useapiserveless.domain.entity.User;
 import com.aws.ccamilo.com.app.useapiserveless.domain.services.IUserServices;
+import com.aws.ccamilo.com.app.useapiserveless.domain.services.NotificationService;
 import com.aws.ccamilo.com.app.useapiserveless.dto.request.UserDTO;
 import com.aws.ccamilo.com.app.useapiserveless.dto.response.UsersDTOResponse;
 import com.aws.ccamilo.com.app.useapiserveless.facade.IUserFacade;
@@ -16,8 +17,7 @@ import java.util.stream.Collectors;
 public class UserServices  implements IUserServices {
 
     private final IUserFacade userFacade;
-
-
+    private final NotificationService notificationService = new NotificationService();
 
     public UserServices(IUserFacade userFacade) {
         this.userFacade = userFacade;
@@ -29,7 +29,8 @@ public class UserServices  implements IUserServices {
         userDTO.setIdUser(generatedId);
         System.out.println("DTO:" + userDTO);
         User user = EntitieBuilder.mapDtoToEntity(userDTO, User.class);
-        userFacade.save(user);
+        User savedUser = userFacade.save(user);
+        notificationService.sendUserCreatedEmail(savedUser);
     }
 
     @Override

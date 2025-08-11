@@ -11,6 +11,7 @@ provider:
 
   environment:
     DYNAMODB_TABLE_NAME: users
+    USER_NOTIFICATION_TOPIC_ARN: ${cf(us-east-1):user-api-serverless-node-dev.EmailNotificationTopicArn}
 
   iam:
     role:
@@ -24,7 +25,11 @@ provider:
             - dynamodb:Scan
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource: arn:aws:dynamodb:us-east-1:*:table/users
+          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/users
+
+        - Effect: Allow
+          Action: sns:Publish
+          Resource: ${cf(us-east-1):user-api-serverless-node-dev.EmailNotificationTopicArn}
 
 package:
   artifact: target/user-api-serverless-java-1.0-SNAPSHOT.jar
