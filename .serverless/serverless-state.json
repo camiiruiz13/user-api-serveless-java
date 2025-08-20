@@ -8,13 +8,20 @@
       "name": "aws",
       "runtime": "java17",
       "region": "us-east-1",
+      "stage": "dev",
       "memorySize": 512,
       "timeout": 10,
       "environment": {
-        "DYNAMODB_TABLE_NAME": "users"
+        "DYNAMODB_TABLE_NAME": "users",
+        "USER_NOTIFICATION_TOPIC_ARN": {
+          "Ref": "EmailNotificationTopic"
+        }
       },
       "iam": {
         "role": {
+          "managedPolicies": [
+            "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+          ],
           "statements": [
             {
               "Effect": "Allow",
@@ -27,12 +34,22 @@
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem"
               ],
-              "Resource": "arn:aws:dynamodb:us-east-1:*:table/users"
+              "Resource": "arn:aws:dynamodb:us-east-1:423889617242:table/users"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sns:Publish"
+              ],
+              "Resource": [
+                {
+                  "Ref": "EmailNotificationTopic"
+                }
+              ]
             }
           ]
         }
       },
-      "stage": "dev",
       "versionFunctions": true,
       "compiledCloudFormationTemplate": {
         "AWSTemplateFormatVersion": "2010-09-09",
@@ -197,6 +214,9 @@
                       },
                       {
                         "$ref": "$[\"service\"][\"provider\"][\"iam\"][\"role\"][\"statements\"][0]"
+                      },
+                      {
+                        "$ref": "$[\"service\"][\"provider\"][\"iam\"][\"role\"][\"statements\"][1]"
                       }
                     ]
                   }
@@ -215,7 +235,10 @@
                     "lambdaRole"
                   ]
                 ]
-              }
+              },
+              "ManagedPolicyArns": [
+                "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
             }
           },
           "GetAllUsersLambdaFunction": {
@@ -225,7 +248,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/user-api-serverless-java/dev/1754668676307-2025-08-08T15:57:56.307Z/target/user-api-serverless-java-1.0-SNAPSHOT.jar"
+                "S3Key": "serverless/user-api-serverless-java/dev/1755268559893-2025-08-15T14:35:59.893Z/target/user-api-serverless-java-1.0-SNAPSHOT.jar"
               },
               "Handler": "com.aws.ccamilo.com.app.useapiserveless.handler.GetAllUsersHandler::handleRequest",
               "Runtime": "java17",
@@ -234,7 +257,10 @@
               "Timeout": 10,
               "Environment": {
                 "Variables": {
-                  "DYNAMODB_TABLE_NAME": "users"
+                  "DYNAMODB_TABLE_NAME": "users",
+                  "USER_NOTIFICATION_TOPIC_ARN": {
+                    "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"USER_NOTIFICATION_TOPIC_ARN\"]"
+                  }
                 }
               },
               "Role": {
@@ -255,7 +281,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/user-api-serverless-java/dev/1754668676307-2025-08-08T15:57:56.307Z/target/user-api-serverless-java-1.0-SNAPSHOT.jar"
+                "S3Key": "serverless/user-api-serverless-java/dev/1755268559893-2025-08-15T14:35:59.893Z/target/user-api-serverless-java-1.0-SNAPSHOT.jar"
               },
               "Handler": "com.aws.ccamilo.com.app.useapiserveless.handler.GetUserByIdHandler::handleRequest",
               "Runtime": "java17",
@@ -264,7 +290,10 @@
               "Timeout": 10,
               "Environment": {
                 "Variables": {
-                  "DYNAMODB_TABLE_NAME": "users"
+                  "DYNAMODB_TABLE_NAME": "users",
+                  "USER_NOTIFICATION_TOPIC_ARN": {
+                    "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"USER_NOTIFICATION_TOPIC_ARN\"]"
+                  }
                 }
               },
               "Role": {
@@ -285,7 +314,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/user-api-serverless-java/dev/1754668676307-2025-08-08T15:57:56.307Z/target/user-api-serverless-java-1.0-SNAPSHOT.jar"
+                "S3Key": "serverless/user-api-serverless-java/dev/1755268559893-2025-08-15T14:35:59.893Z/target/user-api-serverless-java-1.0-SNAPSHOT.jar"
               },
               "Handler": "com.aws.ccamilo.com.app.useapiserveless.handler.CreateUserHandler::handleRequest",
               "Runtime": "java17",
@@ -294,7 +323,10 @@
               "Timeout": 10,
               "Environment": {
                 "Variables": {
-                  "DYNAMODB_TABLE_NAME": "users"
+                  "DYNAMODB_TABLE_NAME": "users",
+                  "USER_NOTIFICATION_TOPIC_ARN": {
+                    "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"USER_NOTIFICATION_TOPIC_ARN\"]"
+                  }
                 }
               },
               "Role": {
@@ -315,7 +347,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/user-api-serverless-java/dev/1754668676307-2025-08-08T15:57:56.307Z/target/user-api-serverless-java-1.0-SNAPSHOT.jar"
+                "S3Key": "serverless/user-api-serverless-java/dev/1755268559893-2025-08-15T14:35:59.893Z/target/user-api-serverless-java-1.0-SNAPSHOT.jar"
               },
               "Handler": "com.aws.ccamilo.com.app.useapiserveless.handler.UpdateUserHandler::handleRequest",
               "Runtime": "java17",
@@ -324,7 +356,10 @@
               "Timeout": 10,
               "Environment": {
                 "Variables": {
-                  "DYNAMODB_TABLE_NAME": "users"
+                  "DYNAMODB_TABLE_NAME": "users",
+                  "USER_NOTIFICATION_TOPIC_ARN": {
+                    "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"USER_NOTIFICATION_TOPIC_ARN\"]"
+                  }
                 }
               },
               "Role": {
@@ -345,7 +380,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/user-api-serverless-java/dev/1754668676307-2025-08-08T15:57:56.307Z/target/user-api-serverless-java-1.0-SNAPSHOT.jar"
+                "S3Key": "serverless/user-api-serverless-java/dev/1755268559893-2025-08-15T14:35:59.893Z/target/user-api-serverless-java-1.0-SNAPSHOT.jar"
               },
               "Handler": "com.aws.ccamilo.com.app.useapiserveless.handler.DeleteUserHandler::handleRequest",
               "Runtime": "java17",
@@ -354,7 +389,10 @@
               "Timeout": 10,
               "Environment": {
                 "Variables": {
-                  "DYNAMODB_TABLE_NAME": "users"
+                  "DYNAMODB_TABLE_NAME": "users",
+                  "USER_NOTIFICATION_TOPIC_ARN": {
+                    "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"USER_NOTIFICATION_TOPIC_ARN\"]"
+                  }
                 }
               },
               "Role": {
@@ -368,54 +406,54 @@
               "DeleteUserLogGroup"
             ]
           },
-          "GetAllUsersLambdaVersionSnbSpc87BRPVuSH7EbCmrNsmo1LOGnCllS8UeZejTec": {
+          "GetAllUsersLambdaVersionkCJxebbqmpSwy9tCjEcxWblthrKKaOKHhEId98Buxs": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetAllUsersLambdaFunction"
               },
-              "CodeSha256": "SPkWlKHbdskc2t940tLEi35zvwaa1YvIiXxYrULwnp8="
+              "CodeSha256": "PO24Uk3a3IlaGQNDNUJ4BGLwGiFuHQfrbCB8pmzWqZ8="
             }
           },
-          "GetUserByIdLambdaVersionimTQrQsHX6XJYf0yxRr64xuiSTaPl67yOUCmDqsk8": {
+          "GetUserByIdLambdaVersionWM3ax4Z9MVSGnkOAA35La0IbRXsPalw9gPHAYC51v4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetUserByIdLambdaFunction"
               },
-              "CodeSha256": "SPkWlKHbdskc2t940tLEi35zvwaa1YvIiXxYrULwnp8="
+              "CodeSha256": "PO24Uk3a3IlaGQNDNUJ4BGLwGiFuHQfrbCB8pmzWqZ8="
             }
           },
-          "CreateUserLambdaVersionZt8Mj8emqL1zVpRcbRg2EH5Ywz90kYI0c8RQjK5w": {
+          "CreateUserLambdaVersionQAkV53YpaLupSIUe57rMgPLbVKEEBx2df8LFb2wh0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateUserLambdaFunction"
               },
-              "CodeSha256": "SPkWlKHbdskc2t940tLEi35zvwaa1YvIiXxYrULwnp8="
+              "CodeSha256": "PO24Uk3a3IlaGQNDNUJ4BGLwGiFuHQfrbCB8pmzWqZ8="
             }
           },
-          "UpdateUserLambdaVersion63e5GbZqmYjOQuNX4lvTEkInWKcg5dexHqt8gV4lk": {
+          "UpdateUserLambdaVersionIoKMiwLpZpYrnNFPuZsthda0SxMLrVIjgq7GZ8V0qM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateUserLambdaFunction"
               },
-              "CodeSha256": "SPkWlKHbdskc2t940tLEi35zvwaa1YvIiXxYrULwnp8="
+              "CodeSha256": "PO24Uk3a3IlaGQNDNUJ4BGLwGiFuHQfrbCB8pmzWqZ8="
             }
           },
-          "DeleteUserLambdaVersionBt2e8cUPHzzxTNehEenhTarmCmcePIkoLr4nZupv4": {
+          "DeleteUserLambdaVersion80SOz49EM6RTFA3NjOZJMZ0DByzPBB2VDgIActNPoN0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DeleteUserLambdaFunction"
               },
-              "CodeSha256": "SPkWlKHbdskc2t940tLEi35zvwaa1YvIiXxYrULwnp8="
+              "CodeSha256": "PO24Uk3a3IlaGQNDNUJ4BGLwGiFuHQfrbCB8pmzWqZ8="
             }
           },
           "HttpApi": {
@@ -797,6 +835,32 @@
               }
             },
             "DependsOn": "HttpApiIntegrationDeleteUser"
+          },
+          "EmailNotificationTopic": {
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+              "TopicName": "user-api-serverless-java-dev-email-notification-topic"
+            }
+          },
+          "UsersDynamoDBTable": {
+            "Condition": "CreateUsersTable",
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "users",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "id",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "id",
+                  "KeyType": "HASH"
+                }
+              ],
+              "BillingMode": "PAY_PER_REQUEST"
+            }
           }
         },
         "Outputs": {
@@ -811,7 +875,7 @@
           "GetAllUsersLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetAllUsersLambdaVersionSnbSpc87BRPVuSH7EbCmrNsmo1LOGnCllS8UeZejTec"
+              "Ref": "GetAllUsersLambdaVersionkCJxebbqmpSwy9tCjEcxWblthrKKaOKHhEId98Buxs"
             },
             "Export": {
               "Name": "sls-user-api-serverless-java-dev-GetAllUsersLambdaFunctionQualifiedArn"
@@ -820,7 +884,7 @@
           "GetUserByIdLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetUserByIdLambdaVersionimTQrQsHX6XJYf0yxRr64xuiSTaPl67yOUCmDqsk8"
+              "Ref": "GetUserByIdLambdaVersionWM3ax4Z9MVSGnkOAA35La0IbRXsPalw9gPHAYC51v4"
             },
             "Export": {
               "Name": "sls-user-api-serverless-java-dev-GetUserByIdLambdaFunctionQualifiedArn"
@@ -829,7 +893,7 @@
           "CreateUserLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateUserLambdaVersionZt8Mj8emqL1zVpRcbRg2EH5Ywz90kYI0c8RQjK5w"
+              "Ref": "CreateUserLambdaVersionQAkV53YpaLupSIUe57rMgPLbVKEEBx2df8LFb2wh0"
             },
             "Export": {
               "Name": "sls-user-api-serverless-java-dev-CreateUserLambdaFunctionQualifiedArn"
@@ -838,7 +902,7 @@
           "UpdateUserLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateUserLambdaVersion63e5GbZqmYjOQuNX4lvTEkInWKcg5dexHqt8gV4lk"
+              "Ref": "UpdateUserLambdaVersionIoKMiwLpZpYrnNFPuZsthda0SxMLrVIjgq7GZ8V0qM"
             },
             "Export": {
               "Name": "sls-user-api-serverless-java-dev-UpdateUserLambdaFunctionQualifiedArn"
@@ -847,7 +911,7 @@
           "DeleteUserLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DeleteUserLambdaVersionBt2e8cUPHzzxTNehEenhTarmCmcePIkoLr4nZupv4"
+              "Ref": "DeleteUserLambdaVersion80SOz49EM6RTFA3NjOZJMZ0DByzPBB2VDgIActNPoN0"
             },
             "Export": {
               "Name": "sls-user-api-serverless-java-dev-DeleteUserLambdaFunctionQualifiedArn"
@@ -886,6 +950,14 @@
             "Export": {
               "Name": "sls-user-api-serverless-java-dev-HttpApiUrl"
             }
+          }
+        },
+        "Conditions": {
+          "CreateUsersTable": {
+            "Fn::Equals": [
+              "false",
+              "true"
+            ]
           }
         }
       },
@@ -973,6 +1045,9 @@
       },
       "vpc": {}
     },
+    "custom": {
+      "createUsersTable": "false"
+    },
     "pluginsData": {},
     "functions": {
       "getAllUsers": {
@@ -993,7 +1068,7 @@
         "timeout": 10,
         "runtime": "java17",
         "vpc": {},
-        "versionLogicalId": "GetAllUsersLambdaVersionSnbSpc87BRPVuSH7EbCmrNsmo1LOGnCllS8UeZejTec"
+        "versionLogicalId": "GetAllUsersLambdaVersionkCJxebbqmpSwy9tCjEcxWblthrKKaOKHhEId98Buxs"
       },
       "getUserById": {
         "handler": "com.aws.ccamilo.com.app.useapiserveless.handler.GetUserByIdHandler::handleRequest",
@@ -1013,7 +1088,7 @@
         "timeout": 10,
         "runtime": "java17",
         "vpc": {},
-        "versionLogicalId": "GetUserByIdLambdaVersionimTQrQsHX6XJYf0yxRr64xuiSTaPl67yOUCmDqsk8"
+        "versionLogicalId": "GetUserByIdLambdaVersionWM3ax4Z9MVSGnkOAA35La0IbRXsPalw9gPHAYC51v4"
       },
       "createUser": {
         "handler": "com.aws.ccamilo.com.app.useapiserveless.handler.CreateUserHandler::handleRequest",
@@ -1033,7 +1108,7 @@
         "timeout": 10,
         "runtime": "java17",
         "vpc": {},
-        "versionLogicalId": "CreateUserLambdaVersionZt8Mj8emqL1zVpRcbRg2EH5Ywz90kYI0c8RQjK5w"
+        "versionLogicalId": "CreateUserLambdaVersionQAkV53YpaLupSIUe57rMgPLbVKEEBx2df8LFb2wh0"
       },
       "updateUser": {
         "handler": "com.aws.ccamilo.com.app.useapiserveless.handler.UpdateUserHandler::handleRequest",
@@ -1053,7 +1128,7 @@
         "timeout": 10,
         "runtime": "java17",
         "vpc": {},
-        "versionLogicalId": "UpdateUserLambdaVersion63e5GbZqmYjOQuNX4lvTEkInWKcg5dexHqt8gV4lk"
+        "versionLogicalId": "UpdateUserLambdaVersionIoKMiwLpZpYrnNFPuZsthda0SxMLrVIjgq7GZ8V0qM"
       },
       "deleteUser": {
         "handler": "com.aws.ccamilo.com.app.useapiserveless.handler.DeleteUserHandler::handleRequest",
@@ -1073,8 +1148,47 @@
         "timeout": 10,
         "runtime": "java17",
         "vpc": {},
-        "versionLogicalId": "DeleteUserLambdaVersionBt2e8cUPHzzxTNehEenhTarmCmcePIkoLr4nZupv4"
+        "versionLogicalId": "DeleteUserLambdaVersion80SOz49EM6RTFA3NjOZJMZ0DByzPBB2VDgIActNPoN0"
       }
+    },
+    "resources": {
+      "Conditions": {
+        "CreateUsersTable": {
+          "Fn::Equals": [
+            "false",
+            "true"
+          ]
+        }
+      },
+      "Resources": {
+        "EmailNotificationTopic": {
+          "Type": "AWS::SNS::Topic",
+          "Properties": {
+            "TopicName": "user-api-serverless-java-dev-email-notification-topic"
+          }
+        },
+        "UsersDynamoDBTable": {
+          "Condition": "CreateUsersTable",
+          "Type": "AWS::DynamoDB::Table",
+          "Properties": {
+            "TableName": "users",
+            "AttributeDefinitions": [
+              {
+                "AttributeName": "id",
+                "AttributeType": "S"
+              }
+            ],
+            "KeySchema": [
+              {
+                "AttributeName": "id",
+                "KeyType": "HASH"
+              }
+            ],
+            "BillingMode": "PAY_PER_REQUEST"
+          }
+        }
+      },
+      "Outputs": {}
     },
     "configValidationMode": "warn",
     "serviceFilename": "serverless.yml",
@@ -1087,17 +1201,23 @@
       "package": {
         "artifact": "target/user-api-serverless-java-1.0-SNAPSHOT.jar",
         "artifactsS3KeyDirname": "serverless/user-api-serverless-java/dev/code-artifacts",
-        "artifactDirectoryName": "serverless/user-api-serverless-java/dev/1754668676307-2025-08-08T15:57:56.307Z"
+        "artifactDirectoryName": "serverless/user-api-serverless-java/dev/1755268559893-2025-08-15T14:35:59.893Z"
+      },
+      "custom": {
+        "$ref": "$[\"service\"][\"custom\"]"
       },
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
+      },
+      "resources": {
+        "$ref": "$[\"service\"][\"resources\"]"
       }
     },
     "layers": {},
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/user-api-serverless-java/dev/1754668676307-2025-08-08T15:57:56.307Z",
+    "artifactDirectoryName": "serverless/user-api-serverless-java/dev/1755268559893-2025-08-15T14:35:59.893Z",
     "artifact": "target/user-api-serverless-java-1.0-SNAPSHOT.jar"
   }
 }
