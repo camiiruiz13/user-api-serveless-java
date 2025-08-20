@@ -1,20 +1,22 @@
 service: user-api-serverless-java
-
 frameworkVersion: '3'
 
 provider:
   name: aws
   runtime: java17
   region: us-east-1
+  stage: dev
   memorySize: 512
   timeout: 10
-
   environment:
     DYNAMODB_TABLE_NAME: users
-    USER_NOTIFICATION_TOPIC_ARN: ${cf(us-east-1):user-api-serverless-node-dev.EmailNotificationTopicArn}
+    USER_NOTIFICATION_TOPIC_ARN:
+      Ref: EmailNotificationTopic
 
   iam:
     role:
+      managedPolicies:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       statements:
         - Effect: Allow
           Action:
@@ -25,14 +27,19 @@ provider:
             - dynamodb:Scan
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource: arn:aws:dynamodb:${self:provider.region}:*:table/users
-
+          Resource:
+            - arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/users
         - Effect: Allow
           Action: sns:Publish
-          Resource: ${cf(us-east-1):user-api-serverless-node-dev.EmailNotificationTopicArn}
+          Resource:
+            - Ref: EmailNotificationTopic
 
 package:
   artifact: target/user-api-serverless-java-1.0-SNAPSHOT.jar
+
+# Toggle legible por Serverless (default: no crear la tabla)
+custom:
+  createUsersTable: ${param:createUsersTable, 'false'}
 
 functions:
   getAllUsers:
@@ -46,7 +53,7 @@ functions:
     handler: com.aws.ccamilo.com.app.useapiserveless.handler.GetUserByIdHandler::handleRequest
     events:
       - httpApi:
-          path: /users/{id}
+          path: "/users/{id}"
           method: get
 
   createUser:
@@ -67,5 +74,33 @@ functions:
     handler: com.aws.ccamilo.com.app.useapiserveless.handler.DeleteUserHandler::handleRequest
     events:
       - httpApi:
-          path: /users/{id}
+          path: "/users/{id}"
           method: delete
+
+resources:
+  # CloudFormation exige operaciones booleanas en Conditions
+  Conditions:
+    CreateUsersTable:
+      Fn::Equals:
+        - ${self:custom.createUsersTable}
+        - 'true'
+
+  Resources:
+    EmailNotificationTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: ${self:service}-${self:provider.stage}-email-notification-topic
+
+    # Solo se crea si CreateUsersTable == true
+    UsersDynamoDBTable:
+      Condition: CreateUsersTable
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: users
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
